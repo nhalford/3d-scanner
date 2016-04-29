@@ -1,0 +1,79 @@
+\documentclass[12pt, letterpaper]{article}
+
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, urlcolor=blue}
+
+\title{CMSC 22010 Final Project Proposal: 3D Scanner}
+\author{Noah Halford and Catherine Moresco}
+\date{April 29, 2016}
+
+\begin{document}
+
+\maketitle
+
+\section{Objective}
+
+We aim to construct a simple laser scanner which will have the ability to scan
+real-world objects and produce STL representations of them, ready to be 3D-printed.
+
+Thus, our project will have two main components: the first will be the hardware---that is,
+the scanner itself---which will be constructed from a combination of electronic parts
+and parts that we will design and 3D print. The second component is the software, which
+will need to:
+\begin{enumerate}
+    \item Control the 3D scanner
+    \item Interpret the data produced by the scanner and use it to produce an STL file
+\end{enumerate}
+
+\section{Background and Previous Work}
+
+One possible use case for 3D printers is object replication. While it certainly is possible
+to design 3D models of real-world objects in CAD software, there are a number of drawbacks
+to this approach: it may require many iterations to get right, it may be time-consuming, and
+it requires a very particular set of skills. One alternative is to use a 3D scanner, which
+simplifies and automates the process of digitally fabricating the desired object.
+
+3D scanners are already in wide use (see Section~\ref{refs}) and commercially
+available.\footnote{Amazon lists 39 available for purchase, ranging widely in price from under
+\$200 to nearly \$50,000.} Moreover, there are already a number of DIY solutions readily
+available on the Internet (some are listed in Section~\ref{refs}), rendering the cost of
+commercially-produced 3D scanners largely irrelevant. As such, the aims of this project
+will be far more pedagogical than practical.
+
+\section{Technical Approach}
+
+Section~\ref{refs} lists a number of references that will be useful in designing a
+laser scanner. The most straightforward approach appears to be a turntable on which
+to put the object to scan, which is able to rotate independently of the laser itself.
+Parts for the 3D scanner which cannot be cannibalized from our 3D printers will be
+designed in CAD software and 3D printed.
+
+The biggest challenge will likely be in processing the data produced by the scanner.
+This can likely be done by combining information about motor positions with the
+other output data.
+
+\section{References} \label{refs}
+
+Below are some DIY guides that might serve as inspiration in our design:
+\begin{itemize}
+    \item \url{http://www.instructables.com/id/3-D-Laser-Scanner/}
+    \item \url{http://www.instructables.com/id/Build-a-30-laser/}
+\end{itemize}
+Other reference:
+\begin{itemize}
+    \item \url{https://en.wikipedia.org/wiki/3D\_scanner}
+    \item \url{http://warnercnr.colostate.edu/~lefsky/isprs/1133.pdf}
+    \item \url{http://www.rockini.name/research/papers/vcgscanner.pdf}
+    \item \url{http://www.mdpi.com/2227-7080/2/2/76}
+\end{itemize}
+
+\section{Timeline}
+
+\begin{description}
+    \item[May 8] Design
+    \item[May 15] Construction completed
+    \item[May 22] Transfer of scanner data to computer
+    \item[May 29] Conversion of scanner data to STL
+\end{description}
+
+\end{document}
