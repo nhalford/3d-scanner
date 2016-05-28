@@ -55,6 +55,19 @@ to the Arduino. Data is captured by two Logitech webcams, which are controlled w
 % What worked and what didn't work?
 % What surprised you?
 \section{Results}
+One of the challenges we faced in this project was designing the outer section (that is,
+the camera and laser mounts). We decided that the inner radius would be 65 mm so that
+we would be able to scan reasonably large objects. However, this meant that the outer
+section of our scanner was too large to be printed in one piece. Because we needed
+the cameras and laser to be placed in precise positions relative to each other in order
+for our software to work, it was necessary for us to print the mounts in pieces that
+could connect to each other and lock. This was first attempted by creating tabs in
+the pieces that could slide into each other, but this proved difficult to print because
+the necessary overhangs sagged, and support was nearly impossible to remove because of
+how close to the bed the tabs were printed. The solution we found was to instead use
+puzzle piece-like connections, but this came with difficulties as well: PLA changes size
+slightly when it dries, so digitally fabricated objects which fit together perfectly
+did not actually fit together after being printed.
 
 % 1/2 page
 % What did you and your team learn from this project?
