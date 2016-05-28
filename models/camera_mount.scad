@@ -38,9 +38,20 @@ module notch(){
     cube([1000, beam_width/2, beam_width/2]);
 };
 
+module hook(){
+    translate([-beam_width/2,-1.5,0]) union()
+    {
+    cube([beam_width,3,3]);
+    translate([0,0,3]) rotate([-45,0,0]) cube([beam_width,3,4]);
+    }
+}
 
-difference(){
-    truss();
-    notch();
-};
+//hook();
+truss();
+translate([0,beam_width / 2,beam_width / 2]) translate([smaller_side_length / 2, -triangle_width, 0]) rotate([45,0,0]) rotate(180) hook();
+translate([0,-beam_width / 2,beam_width / 2]) translate([smaller_side_length / 2, triangle_width, 0]) rotate([-45,0,]) hook();
+//difference(){
+//    truss();
+//    notch();
+//};
 

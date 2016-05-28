@@ -4,7 +4,9 @@ import numpy as np
 import cv2
 import serial
 
-cap = cv2.VideoCapture(0)
+# 1 for external camera
+cap = cv2.VideoCapture(1)
+
 i = 0
 steps = 512
 ser = serial.Serial("/dev/cu.usbmodem33", 9600)

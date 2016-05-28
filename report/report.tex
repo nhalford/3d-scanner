@@ -1,0 +1,82 @@
+\documentclass[12pt, letterpaper]{article}
+
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, urlcolor=blue}
+
+\title{CMSC 22010 Final Project: 3D Scanner}
+\author{Noah Halford\\
+    \href{mailto:nhalford@uchicago.edu}{nhalford@uchicago.edu}
+        \and
+        Catherine Moresco\\
+        \href{mailto:cmoresco@uchicago.edu}{cmoresco@uchicago.edu}}
+\date{June 3, 2016}
+%TODO: Team name
+
+\begin{document}
+
+\maketitle
+
+% 1/2 page
+% Describe what you planned to accomplish with the project.
+% What specifically will be created, demonstrated, invented?
+% What do you expect to learn from this project?
+\section{Specific Aims of the Project}
+
+% 1 page
+% Discuss previous work on this problem by others.
+% Discuss sources of information or designs you are leveraging.
+% Discuss shortcomings of previous efforts.
+\section{Background Research}
+
+% 2 pages
+% Describe in some detail how you went about designing and building.
+% Describe the steps you went through to develop ideas and prototypes.
+% Describe any changes in your plan from the pre-proposal stage.
+\section{Approach}
+
+% 1/2 page
+% Describe any novel technology that you used or developed during the
+% course of the project.
+\section{Technologies Used}
+The laser scanner is controlled with an Arduino Uno, running a simple program that
+rotates moves the stepper motor by one step when it receives a message. Communication
+with the Arduino is controlled by a Python program which made use of the
+\href{https://github.com/pyserial/pyserial}{pySerial} library in order to send messages
+to the Arduino. Data is captured by two Logitech webcams, which are controlled with
+\href{http://opencv.org}{OpenCV}.
+
+% 1/2 page
+% Discuss what is new about your attack on the problem.
+% Describe any invention or novel approaches used.
+\section{Innovations}
+
+% 1 page
+% Describe the outcome of your efforts.
+% What worked and what didn't work?
+% What surprised you?
+\section{Results}
+
+% 1/2 page
+% What did you and your team learn from this project?
+% What would you do differently next time?
+% What advice would you give next year's students?
+\section{Lessons Learned}
+
+% 1/2 page
+% Summarize the overall project; what were the most important results?
+% Summarize the impact of the project on the specific aims.
+\section{Conclusion}
+
+% TODO: Citations/references
+
+% Summarize what each team member contributed to the project and report.
+\section{Team Member Contributions}
+
+\appendix
+% Include photos showing progress and final results.
+\section{Photos}
+
+% Include code and models written for the project.
+\section{Code Listings}
+
+\end{document}
