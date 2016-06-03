@@ -9,8 +9,7 @@
         \and
         Catherine Moresco\\
         \href{mailto:cmoresco@uchicago.edu}{cmoresco@uchicago.edu}}
-\date{June 3, 2016}
-%TODO: Team name
+        \date{{\Large Team Scanner Planner}\\[5mm] June 3, 2016}
 
 \begin{document}
 
@@ -20,7 +19,21 @@
 % Describe what you planned to accomplish with the project.
 % What specifically will be created, demonstrated, invented?
 % What do you expect to learn from this project?
-\section{Specific Aims of the Project}
+\section{Specific Aims of the Project} \label{aims}
+
+One possible use case for 3D printers is object replication. While it certainly is possible
+to design 3D models of real-world objects in CAD software, there are a number of drawbacks
+to this approach: it may require many iterations to get right, it may be time-consuming, and
+it requires a very particular set of skills. One alternative is to use a 3D scanner, which
+simplifies and automates the process of digitally fabricating the desired object.
+
+The goal of this project was to design and build a 3D scanner that could ultimately be used
+to produce STL file approximations of real-world objects. Of course, because we were doing
+this cheaply, we did not anticipate perfect results: our attempt to create a laser scanner
+would be considered successful if we were able to produce STL files that were recognizable
+as the objects they represented. We did not expect that our resulting STLs would necessarily
+be completely faithful representations of the original objects.
+
 
 % 1 page
 % Discuss previous work on this problem by others.
@@ -28,22 +41,53 @@
 % Discuss shortcomings of previous efforts.
 \section{Background Research}
 
+% TODO
+
+Laser scanning is a technology that has already been very well-developed; going into
+this project, we knew that it was unlikely for us to make significant improvements
+over existing designs. Our goals were to design a laser scanner that would be cheap
+and would work (as described in Section~\ref{aims}), but, perhaps most importantly,
+to learn about how laser scanners work. Instructions for a number of cheap DIY laser
+scanners already exist on the Internet, and we used these as inspiration for our
+project---although we did design our own hardware and software.
+% TODO: Cite Instructables.
+
 % 2 pages
 % Describe in some detail how you went about designing and building.
 % Describe the steps you went through to develop ideas and prototypes.
 % Describe any changes in your plan from the pre-proposal stage.
 \section{Approach}
 
+One of the challenges that we faced in this project was designing the laser scanner.
+We went through a number of design iterations, and the final product changed substantially
+from our plan from the pre-proposal stage. Our original plan was to have two
+webcams and the lasers between them mounted on a circular arc, with a turntable that
+could turn independently. The object to be scanned would sit on the turntable, which
+would rotate with a stepper motor. At each step of the motor, each camera would capture
+an image; we hoped to be able to combine data about rotation with a number of distance
+measurements (the distance between the cameras, between the cameras and the lasers, etc.)
+in order to produce a 3D model representation of the object we wished to scan.
+We built a prototype of this kind of scanner, but ultimately decided that it would % TODO: Pictures?
+too difficult to appropriately deal with the data that we produced. Our prototype used
+an Arduino attached to the stepper motor to control the turntable. A Python program
+communicating with the Arduino allowed us rotate the stepper motor (that is, the turntable)
+one step at a time, and take a photo from each webcam between steps. This produced
+1024 images (512 per camera), but because of the low resolution of the webcams and
+the lack of precision in our constructed laser scanner, we decided that this approach
+would not work.
+
+We finally settled on a different, arguably simpler design.
+
 % 1/2 page
 % Describe any novel technology that you used or developed during the
 % course of the project.
 \section{Technologies Used}
-The laser scanner is controlled with an Arduino Uno, running a simple program that
-rotates moves the stepper motor by one step when it receives a message. Communication
-with the Arduino is controlled by a Python program which made use of the
-\href{https://github.com/pyserial/pyserial}{pySerial} library in order to send messages
-to the Arduino. Data is captured by two Logitech webcams, which are controlled with
-\href{http://opencv.org}{OpenCV}.
+%The laser scanner is controlled with an Arduino Uno, running a simple program that
+%rotates moves the stepper motor by one step when it receives a message. Communication
+%with the Arduino is controlled by a Python program which made use of the
+%\href{https://github.com/pyserial/pyserial}{pySerial} library in order to send messages
+%to the Arduino. Data is captured by two Logitech webcams, which are controlled with
+%\href{http://opencv.org}{OpenCV}.
 
 % 1/2 page
 % Discuss what is new about your attack on the problem.
@@ -55,19 +99,6 @@ to the Arduino. Data is captured by two Logitech webcams, which are controlled w
 % What worked and what didn't work?
 % What surprised you?
 \section{Results}
-One of the challenges we faced in this project was designing the outer section (that is,
-the camera and laser mounts). We decided that the inner radius would be 65 mm so that
-we would be able to scan reasonably large objects. However, this meant that the outer
-section of our scanner was too large to be printed in one piece. Because we needed
-the cameras and laser to be placed in precise positions relative to each other in order
-for our software to work, it was necessary for us to print the mounts in pieces that
-could connect to each other and lock. This was first attempted by creating tabs in
-the pieces that could slide into each other, but this proved difficult to print because
-the necessary overhangs sagged, and support was nearly impossible to remove because of
-how close to the bed the tabs were printed. The solution we found was to instead use
-puzzle piece-like connections, but this came with difficulties as well: PLA changes size
-slightly when it dries, so digitally fabricated objects which fit together perfectly
-did not actually fit together after being printed.
 
 % 1/2 page
 % What did you and your team learn from this project?
