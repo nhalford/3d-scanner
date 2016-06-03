@@ -3,15 +3,21 @@
 import cv2
 import numpy as np
 
-path = './test_scan/video_test.mov'
-threshold = 60
+path = './test_scan/cupvid.mov'
+threshold = 40
 
 vidcap = cv2.VideoCapture(path)
 
 success, img = vidcap.read()
 
-f = open('out.xyz','w+')
+imgno = 50
+# path = "./test_scan/burst/cup - " + str(imgno) + ".jpg"
+# img = cv2.imread(path)
+
+f = open('out2.xyz','w+')
 while success:
+    print path 
+
 #img = cv2.imread(path)
 # NumPy array for threshold image
     result = np.zeros(np.shape(img))
@@ -34,15 +40,33 @@ while success:
     nonzero_coords[:,0] = nonzero[1]
     nonzero_coords[:,1] = nonzero[0]
     
-    result = cv2.cvtColor(thresh2,cv2.COLOR_GRAY2RGB)
+    edges = cv2.Canny(thresh2,50,150,apertureSize = 3)
+    result = cv2.cvtColor(edges,cv2.COLOR_GRAY2RGB)
     
     # Source: http://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_houghlines/py_houghlines.html
-    lines = cv2.HoughLines(np.array(thresh, dtype=np.uint8),0.1,np.pi/60,20)
+    lines = cv2.HoughLines(np.array(edges, dtype=np.uint8),.1,np.pi/60,10)
+    # if np.any(lines):
+    #         for rho,theta in lines[0]:
+    #                 a = np.cos(theta)
+    #                 b = np.sin(theta)
+    #                 x0 = a*rho
+    #                 y0 = b*rho
+    #                 x1 = int(x0 + 1000*(-b))
+    #                 y1 = int(y0 + 1000*(a))
+    #                 x2 = int(x0 - 1000*(-b))
+    #                 y2 = int(y0 - 1000*(a))
+
+    #                 cv2.line(result,(x1,y1),(x2,y2),(0,0,255),2)
+    #                 # cv2.line(result,(x1,y1),(x2,y2),(0,0,255),2)
+            
+    #                 cv2.imwrite('hough.png',result)
     if np.any(lines):
+        print "lines found"
         coords = lines[0] # (rho, theta)
         th_max = np.amax(coords.T[1])
-        filtered_list = filter(lambda x: x != 0 and th_max - x > 0.5*th_max, (coords.T[1]).tolist())
+        filtered_list = filter(lambda x: x != 0 and th_max - x > 0.75*th_max , (coords.T[1]).tolist())
         if len(filtered_list) > 0:
+            print "len > 0"
             th_min = min(filtered_list)
             min_found = False
             max_found = False
@@ -71,6 +95,7 @@ while success:
                         axes[1] = np.array([slope, intercept])
             
                     cv2.line(result,(x1,y1),(x2,y2),(0,0,255),2)
+                    # cv2.line(result,(x1,y1),(x2,y2),(0,0,255),2)
             
             cv2.imwrite('hough.png',result)
             
@@ -79,7 +104,7 @@ while success:
             m2, b2 = axes[1]
             
             def unit(slope):
-                theta = np.arctan(1/slope)
+                theta = np.arctan(slope)
                 return np.array([np.cos(theta), np.sin(theta)])
             
             x_intersection = (b2 - b1) / (m1 - m2)
@@ -121,4 +146,8 @@ while success:
                 f.write('{} {} {}\n'.format(row[0], row[1], row[2]))
     
     success, img = vidcap.read()
+    # print "img "  + str(imgno) + " processed"
+    imgno += 1
+    # img = cv2.imread(path)
+    # path = "./test_scan/burst/cup - " + str(imgno) + ".jpg"
 f.close()
