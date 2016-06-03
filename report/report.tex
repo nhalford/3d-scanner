@@ -2,6 +2,8 @@
 
 \usepackage{hyperref}
 \hypersetup{colorlinks=true, urlcolor=blue, citecolor=magenta}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
 
 \title{GrandScan: A Portable, Scalable Laser Scanner}
 \author{Noah Halford\\
@@ -259,6 +261,69 @@ issues.  Perhaps with more time, it would have been possible to produce successf
 \appendix
 % Include photos showing progress and final results.
 \section{Photos}
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/cameramount.png}
+    \caption{The SCAD representation of our original webcam mount.}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/laserhousing}
+    \caption{The SCAD representation of the laser housing.}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/corner.png}
+    \caption{The SCAD representation of the corner piece which connects all of
+    the dowels.}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/gantryscad.png}
+    \caption{The SCAD representation of the gantry, on which the laser is mounted.}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/iphonehousing}
+    \caption{The SCAD representation of the housing for the iPhone, which replaces
+    the webcams in our updated scanner.}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/construction.jpg}
+    \caption{Constructing the first iteration.}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/applescan.jpg}
+    \caption{Scanning an apple with the first iteration of our scanner.}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/gantry.jpg}
+    \caption{The gantry, with the laser and Arduino for power.}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/dogscan.jpg}
+    \caption{Scanning a stuffed dog with the second iteration of our scanner.}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/pointcloud.png}
+    \caption{A point cloud produced from the scan of a cup. This is one indication that our
+    code needs refinement: most of the data here is the wall or the floor, as the cup is
+relatively small compared to the volume that we scan.}
+\end{figure}
 
 % Include code and models written for the project.
 \section{Code Listings}
