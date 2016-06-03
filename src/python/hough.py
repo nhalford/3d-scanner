@@ -16,7 +16,6 @@ print y
 
 thresh = cv2.inRange(img,np.array([0,0,threshold]),np.array([255,255,255]))
 cv2.imwrite("threshold.png", thresh)
-print thresh.nonzero()
 
 eroded = cv2.erode(thresh, np.ones((5,5)))
 cv2.imwrite("eroded.png", thresh)
