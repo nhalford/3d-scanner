@@ -40,7 +40,7 @@ As will be discussed later, many of the existing and easily available designs fo
 to attempt to create a laser scanner which would be both portable and scalable, as well
 as affordable.
 
-From this project, we hoped to learn both hoow laser scanning works and what some of its
+From this project, we hoped to learn both how laser scanning works and what some of its
 limitations are.
 
 % 1 page
@@ -58,9 +58,12 @@ scanners already exist on the Internet, and we used these as inspiration for our
 project---although we did design our own hardware and software.
 
 The two main preexisting DIY scanners that we usd as inspiration for this project
-were~\cite{sardau} and~\cite{dentroman}. We found~\cite{sardau} first and based
+were~\cite{sardau} and~\cite{dentroman}. 
+
+\subsection{Approaches to design}
+We found~\cite{sardau} first and based
 our initial design off of this idea, because it was small and easily portable. However,
-in building and trying to use a scanner derived from this design, we decided that it 
+in building and trying to use a scanner derived from this design, we decided that it
 was too small. In testing this design, we found ourselves wanting to scan larger objects;
 ideally, we would like to be able to scan a human.
 
@@ -72,32 +75,51 @@ with the design itself.
 It appears that there are no affordable, scalable, and portable DIY laser scanners.
 We sought to change this.
 
+\subsection{Approaches to measurement and mathematics}
+While designs vary wildly from laser scanner to laser scanner, the mathematical methods developed for the capturing of data and the construction of 3D models are fairly well-established; that being said, there are several different methods available, and it is interesting to note that each of these scanners take a different approach.
+
+The Sarduscan takes the more canonical approach to laser scanning: that of triangulation. The laser is mounted a known angle to the line of sight of the camera; thus, distance from the camera to the target can be determined by the apparent location of the laser point in the camera's field of view. Laser locations are found by taking two images--one with the laser off and one with the laser on--and finding the difference between them. For a more detailed explanation of this, see ~\cite{triangulation}.
+
+In contrast, the Dentroman786 scanner doesn't use this approach, instead using a mathematical approach based on deformations of light more akin to structured-light scanning seen in devices like the Kinect. The angle between the camera and the laser is constantly changing; to find the location of the points in relation to the camera, we find the lines where the laser intersects the wall and the floor, and use these to define a basis for a coordinate transform to the camera's frame.
+
+We experimented with both of these techniques in different iterations of GrandScan.
+
 % 2 pages
 % Describe in some detail how you went about designing and building.
 % Describe the steps you went through to develop ideas and prototypes.
 % Describe any changes in your plan from the pre-proposal stage.
 \section{Approach}
 
-One of the challenges that we faced in this project was designing the laser scanner.
-We went through a number of design iterations, and the final product changed substantially
-from our plan from the pre-proposal stage. Initially, we modeled our laser scanner after
-the one described in~\cite{sardau}. Our original plan was to have two webcams and the
-lasers between them mounted on a circular arc, with a turntable that could turn
-independently. The object to be scanned would sit on the turntable, which would rotate
-with a stepper motor. At each step of the motor, each camera would capture
-an image; we hoped to be able to combine data about rotation with a number of distance
+In our exploration of the different technologies and techniques used to create DIY laser scanners, our development cycle went through several iterations.
+
+\subsection{GrandScan 1.0}
+Initially, we modeled our laser scanner after
+the one described in~\cite{sardau}. We designed and constructed a laser scanner consisting of  two webcams and tqo
+lasers between them mounted on a circular arc, with a turntable that was mounted on a stepper motor
+at the center of the arc. The target would sit on the turntable as it was scanned. At each step of the motor, each camera would capture
+an image; we the planned to combine data about rotation with a number of distance
 measurements (the distance between the cameras, between the cameras and the lasers, etc.)
-in order to produce a 3D model representation of the object we wished to scan.
-We built a prototype of this kind of scanner, but ultimately decided that it would
-too difficult to appropriately deal with the data that we produced. Our prototype used
+in order to produce a 3D model representation of the object we wished to scan using triangulation, as the Sarduscan scanner does. Our prototype used
 an Arduino attached to the stepper motor to control the turntable. A Python program
 communicating with the Arduino allowed us rotate the stepper motor (that is, the turntable)
 one step at a time, and take a photo from each webcam between steps. This produced
-1024 images (512 per camera), but because of the low resolution of the webcams and
-the lack of precision in our constructed laser scanner, we decided that this approach
-would not work.
+1024 images (512 per camera).
+After building a protoype of this scanner, we were dissatisfied with it for several reasons.
+Firstly, the configuration was not adjustable. The parts were 3D printed, and, after several tried, fit together nicely and looked quite nice; however, when actually scanning an object, we realized that we wanted to have the freedom to adjust the heights of the lasers and the angles of the cameras--something that our entirely 3D printed design did not allow.
+Additionally, the webcams did not offer the resolution we were hoping for. Their autofocus function was ultimately unsatisfactory, and the images obtained as data were blurry and poorly resolved; even to the naked eye, structure of the target was hard to discern--we were not optimistic about the capabilities of software to accurately generate a point cloud.
+Additionally, we realized that scanning on this level was--well--a little boring. After looking around for objects to test our scanner on, we realized that most objects that would fit on the print bed were rotationally symmetric, anyway (cups, salt shakers, bottles, etc); there were very few things that would fit on the 8-inch print bed that we would even want to scan. So, we decided to think a little bigger and begin a second iteration of our design.
 
-We finally settled on a different, arguably simpler design, inspired by~\cite{dentroman}.
+\subsection{GrandScan 2.0}
+Our second design was more heavily inspired by~\cite{dentroman}, using a similar laser-gantry-style scanning method and a similar mathematical approach. Ours, however, was much bigger and much simpler.
+
+The design consists of three meter-long rods, joined at right angles at their ends by a 3D-printed joint. On the upright rod, there is a holder for an iPhone that can slide up and down to be of adjustable height. A gantry slides over one of the rods on the ground, on which is mounted the laser and the controlling Arduino. These three rods define a space of one cubic meter that represents the print volume; one "leg" is the track for the gantry and the width of the space, the other "leg" maintains a distance from the wall and provides support, and the third upright rod is a mount for the camera and represents the maximum printable height. Theoretically, a space of this size could even be used to scan a human--with eye protection, of course!
+
+Mathematically, we also started from scratch, using the same technique as ~\cite{dentroman}. We first used a Hough transform to attempt to find the lines where the laser scans the floor and the wall; using these, we then transformed the other segments of the line using a coordinate transform to determine their location in our model. 
+
+We decided to switch to use of an iPhone to record data. This gives us the benefit of higher resolution than our cheap webcams, but also comes at the cost of not being directly able to transfer images to the controlling program, or to control the camera from the program. While, eventually, it might be interesting to write an app to manage this sort of control, we unfortunately did not have the time to do so. Instead, we recorded photos and videos from that fixed position, and then uploaded them to the computer for processing.
+
+
+
 
 % 1/2 page
 % Describe any novel technology that you used or developed during the
@@ -231,7 +253,7 @@ issues.  Perhaps with more time, it would have been possible to produce successf
 \section{Team Member Contributions}
 \begin{description}
     \item[Noah] Majority of programming, report
-    \item[Catherine] Design, class presentation
+    \item[Catherine] Design, OpenSCAD modeling, presentation
 \end{description}
 
 \appendix
@@ -242,7 +264,7 @@ issues.  Perhaps with more time, it would have been possible to produce successf
 \section{Code Listings}
 All of the code for this project (including OpenSCAD code, as well as some sample
 scanning photos and videos) is available on
-\href{https://github.com/nhalford/3d-scanner/}{GitHub}. Our Python program is 
+\href{https://github.com/nhalford/3d-scanner/}{GitHub}. Our Python program is
 \texttt{src/python/hough.py}.
 
 \end{document}
