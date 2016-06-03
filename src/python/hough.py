@@ -4,14 +4,14 @@ import cv2
 import numpy as np
 
 path = './test_scan/video_test.mov'
-threshold = 100
+threshold = 60
 
 vidcap = cv2.VideoCapture(path)
 
 success, img = vidcap.read()
 
+f = open('out.xyz','w+')
 while success:
-
 #img = cv2.imread(path)
 # NumPy array for threshold image
     result = np.zeros(np.shape(img))
@@ -19,32 +19,34 @@ while success:
     y, x = np.shape(img[:,:,1])
     
     thresh = cv2.inRange(img,np.array([0,0,threshold]),np.array([255,255,255]))
+    for i in range(int(y/4), int(9*y/16)):
+        for j in range(x):
+            thresh[i,j] = 0
     cv2.imwrite("threshold.png", thresh)
+
+    thresh2 = cv2.inRange(img,np.array([0,0,int(1.2*threshold)]),np.array([255,255,255]))
+    cv2.imwrite("threshold2.png", thresh2)
     
-    nonzero = np.nonzero(thresh)
+    nonzero = np.nonzero(thresh2)
     
     # White pixels, each entry is an array [x y]
     nonzero_coords = np.zeros((np.shape(nonzero[0])[0], 2))
     nonzero_coords[:,0] = nonzero[1]
     nonzero_coords[:,1] = nonzero[0]
     
-    result = cv2.cvtColor(thresh,cv2.COLOR_GRAY2RGB)
+    result = cv2.cvtColor(thresh2,cv2.COLOR_GRAY2RGB)
     
     # Source: http://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_houghlines/py_houghlines.html
-    lines = cv2.HoughLines(np.array(threshold, dtype=np.uint8),0.1,np.pi/60,20)
-    print lines
+    lines = cv2.HoughLines(np.array(thresh, dtype=np.uint8),0.1,np.pi/60,20)
     if np.any(lines):
         coords = lines[0] # (rho, theta)
         th_max = np.amax(coords.T[1])
-        filtered_list = filter(lambda x: x != 0, (coords.T[1]).tolist())
+        filtered_list = filter(lambda x: x != 0 and th_max - x > 0.5*th_max, (coords.T[1]).tolist())
         if len(filtered_list) > 0:
             th_min = min(filtered_list)
             min_found = False
             max_found = False
 
-            print "Min: {}".format(th_min)
-            print "Max: {}".format(th_max)
-            
             axes = np.zeros((2,2))
             
             for rho,theta in coords:
@@ -88,10 +90,11 @@ while success:
             # All nonzero points, indexed by y value
             pointList = {}
             for i, j in nonzero_coords:
-                if j in pointList.keys():
-                    pointList[j].append(i)
-                else:
-                    pointList[j] = [i]
+                if j > y/4 and j < 9*y/16:
+                    if j in pointList.keys():
+                        pointList[j].append(i)
+                    else:
+                        pointList[j] = [i]
             
             # The points that we will use in our output, indexed by y
             # value
@@ -114,9 +117,8 @@ while success:
             # Each entry will be a point in our point cloud
             point_matrix = np.column_stack((dot_prods, w_col))
             
-            f = open('out.xyz','w+')
             for row in point_matrix:
                 f.write('{} {} {}\n'.format(row[0], row[1], row[2]))
-            f.close()
     
     success, img = vidcap.read()
+f.close()
