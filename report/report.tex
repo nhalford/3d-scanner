@@ -1,9 +1,9 @@
 \documentclass[12pt, letterpaper]{article}
 
 \usepackage{hyperref}
-\hypersetup{colorlinks=true, urlcolor=blue}
+\hypersetup{colorlinks=true, urlcolor=blue, citecolor=magenta}
 
-\title{CMSC 22010 Final Project: 3D Scanner}
+\title{GrandScan: A Portable, Scalable Laser Scanner}
 \author{Noah Halford\\
     \href{mailto:nhalford@uchicago.edu}{nhalford@uchicago.edu}
         \and
@@ -29,19 +29,25 @@ simplifies and automates the process of digitally fabricating the desired object
 
 The goal of this project was to design and build a 3D scanner that could ultimately be used
 to produce STL file approximations of real-world objects. Of course, because we were doing
-this cheaply, we did not anticipate perfect results: our attempt to create a laser scanner
-would be considered successful if we were able to produce STL files that were recognizable
-as the objects they represented. We did not expect that our resulting STLs would necessarily
-be completely faithful representations of the original objects.
+this cheaply, we did not anticipate results that might resemble those of an industrial-quality
+laser scanner: our attempt to create a laser scanner would be considered successful if we were
+able to produce STL files that were recognizable as the objects they represented. We did not
+expect that our resulting STLs would necessarily be completely faithful representations of the
+original objects.
 
+As will be discussed later, many of the existing and easily available designs for DIY
+3D scanners are lacking in either portability or scalability. This led us
+to attempt to create a laser scanner which would be both portable and scalable, as well
+as affordable.
+
+From this project, we hoped to learn both hoow laser scanning works and what some of its
+limitations are.
 
 % 1 page
 % Discuss previous work on this problem by others.
 % Discuss sources of information or designs you are leveraging.
 % Discuss shortcomings of previous efforts.
-\section{Background Research}
-
-% TODO
+\section{Background Research} \label{background}
 
 Laser scanning is a technology that has already been very well-developed; going into
 this project, we knew that it was unlikely for us to make significant improvements
@@ -50,7 +56,21 @@ and would work (as described in Section~\ref{aims}), but, perhaps most important
 to learn about how laser scanners work. Instructions for a number of cheap DIY laser
 scanners already exist on the Internet, and we used these as inspiration for our
 project---although we did design our own hardware and software.
-% TODO: Cite Instructables.
+
+The two main preexisting DIY scanners that we usd as inspiration for this project
+were~\cite{sardau} and~\cite{dentroman}. We found~\cite{sardau} first and based
+our initial design off of this idea, because it was small and easily portable. However,
+in building and trying to use a scanner derived from this design, we decided that it 
+was too small. In testing this design, we found ourselves wanting to scan larger objects;
+ideally, we would like to be able to scan a human.
+
+The scanner presented in~\cite{dentroman} is not scalable either, but it allows for the
+scanning of somewhat larger objects. However, this scanner is much less portable and much
+more unwieldy than~\cite{sardau}. We liked the concept of this design, but we were unhappy
+with the design itself.
+
+It appears that there are no affordable, scalable, and portable DIY laser scanners.
+We sought to change this.
 
 % 2 pages
 % Describe in some detail how you went about designing and building.
@@ -60,14 +80,15 @@ project---although we did design our own hardware and software.
 
 One of the challenges that we faced in this project was designing the laser scanner.
 We went through a number of design iterations, and the final product changed substantially
-from our plan from the pre-proposal stage. Our original plan was to have two
-webcams and the lasers between them mounted on a circular arc, with a turntable that
-could turn independently. The object to be scanned would sit on the turntable, which
-would rotate with a stepper motor. At each step of the motor, each camera would capture
+from our plan from the pre-proposal stage. Initially, we modeled our laser scanner after
+the one described in~\cite{sardau}. Our original plan was to have two webcams and the
+lasers between them mounted on a circular arc, with a turntable that could turn
+independently. The object to be scanned would sit on the turntable, which would rotate
+with a stepper motor. At each step of the motor, each camera would capture
 an image; we hoped to be able to combine data about rotation with a number of distance
 measurements (the distance between the cameras, between the cameras and the lasers, etc.)
 in order to produce a 3D model representation of the object we wished to scan.
-We built a prototype of this kind of scanner, but ultimately decided that it would % TODO: Pictures?
+We built a prototype of this kind of scanner, but ultimately decided that it would
 too difficult to appropriately deal with the data that we produced. Our prototype used
 an Arduino attached to the stepper motor to control the turntable. A Python program
 communicating with the Arduino allowed us rotate the stepper motor (that is, the turntable)
@@ -76,29 +97,85 @@ one step at a time, and take a photo from each webcam between steps. This produc
 the lack of precision in our constructed laser scanner, we decided that this approach
 would not work.
 
-We finally settled on a different, arguably simpler design.
+We finally settled on a different, arguably simpler design, inspired by~\cite{dentroman}.
 
 % 1/2 page
 % Describe any novel technology that you used or developed during the
 % course of the project.
-\section{Technologies Used}
-%The laser scanner is controlled with an Arduino Uno, running a simple program that
-%rotates moves the stepper motor by one step when it receives a message. Communication
-%with the Arduino is controlled by a Python program which made use of the
-%\href{https://github.com/pyserial/pyserial}{pySerial} library in order to send messages
-%to the Arduino. Data is captured by two Logitech webcams, which are controlled with
-%\href{http://opencv.org}{OpenCV}.
+\section{Technologies Used} \label{technology}
+Our project combined a number of technologies to create a laser scanner.
+In our initial design, we controlled an Arduino Uno in Python with the
+\href{https://github.com/pyserial/pyserial}{pySerial} library; we also
+captured images with two Logitech webcams. We still ended up using the
+Arduino in the final design, but only because it was a convenient way to
+power our laser; any 5-volt power source would have been sufficient.
+When testing our initial design, we also found that the resolution of
+the Logitech webcams was too low to produce good results, so we instead
+designed a mount for an iPhone so that we would be able to scan with a
+higher-resolution camera. All of the image processing was performed with
+\href{http://opencv.org}{OpenCV}.
 
 % 1/2 page
 % Discuss what is new about your attack on the problem.
 % Describe any invention or novel approaches used.
 \section{Innovations}
 
+As discussed in Section~\ref{background}, the concept of a DIY laser scanner is
+not new: a number of designs already exist on websites like Instructables. The
+three desirable characteristics of a DIY laser scanner are affordability,
+scalability, and portability. It appears that most preexisting DIY scanners have
+two out of three of these: we could not find any that had all three, so we created
+them.
+
+One unique approach that we took was building a scanner that was highly modular.
+Many scanner designs on the Internet are designs for an entire scanner, meaning
+that it is not easy to make simple part swaps in order to change the scale at which
+the scanner can operate. Our scanner was designed specifically to come apart, so
+it is very easy to, with the same printed parts, change the scale by simply swapping
+out the rods. In fact, the advantage of the modularity of our design is twofold:
+it automatically gives us the easy portability that we wanted as well.
+
 % 1 page
 % Describe the outcome of your efforts.
 % What worked and what didn't work?
 % What surprised you?
-\section{Results}
+\section{Results} \label{results}
+
+We were able to successfully design a laser scanner that met all three of our
+goals: it was highly affordable, very scalable, and easy to transport.
+Not counting the Arduino, which, as discussed in Section~\ref{technology},
+was only used as a power source and could easily be replaced by something
+simpler, or the iPhone that we used for image (actually, video) capture,
+this laser scanner is highly affordable: we bought two lasers from
+\href{http://www.amazon.com/Focusable-650nm-Module-driver-Plastic/dp/B00S1EXW3Y}{Amazon}
+for under \$5, and the three dowels were about \$3 in total. The rest of the
+parts were 3D printed, so the scanner cost under \$10 total to build, taking into
+account an approximation of the cost of filament. This is more affordable than
+the designs shown in both~\cite{dentroman} and~\cite{sardau}.
+
+Also as we had planned, our laser scanner is scalable and very portable.
+The only part of our design that limits the size of an object that can be scanned
+is the rod length: if one wants to scan larger objects, then larger dowels can
+be purchased. The entire scanner also easily comes apart into a few small parts
+which can be transported and quickly put together somewhere else; again, the
+limiting factor in portability is the size of the dowels.
+
+The software was less successful than the hardware. Part of the reason for this
+may be that our image processing techniques were not highly sophisticated. As
+suggested by~\cite{instructions}, we first produced a binary image by thresholding
+on the red value in each frame of the captured video, and then we performed the
+a Hough transform to determine which lines corresponded to the projection of
+the laser on the wall and the floor. However, the Hough transform had a
+tendency to find erroneous lines; we did our best to fix this issue, but in
+the end, it was not perfect, and the ``floor'' and ``wall'' that our software
+finds are not necessarily the true floor and wall. This may have led to some
+of our issues as well. \cite{instructions} describes software in which, after
+the Hough transform is performed, the user is presented with multiple options
+for the ``correct'' lines. Implementing this likely could have improved our results.
+
+We were surprised by the fact that the image processing used for producing scans
+was relatively simple: it essentially amounts to determining where the floor and
+the wall are and then performing a number of projections.
 
 % 1/2 page
 % What did you and your team learn from this project?
@@ -106,15 +183,56 @@ We finally settled on a different, arguably simpler design.
 % What advice would you give next year's students?
 \section{Lessons Learned}
 
+This project taught us about how laser scanners work, and about the image processing
+that needs to be done in order to successfully produce a 3D scan of a real-world object.
+
+Something that we discussed while building this (but unfortunately at a time that
+was too late to change course) was creating a laser scanner that would be even more
+portable, by fabricating what would essentially amount to a smartphone case; the laser
+could then be mounted on the phone, and the phone could combine camera data with
+accelerometer and gyroscope data in order to produce a 3D scan. AutoCAD 123D Catch
+is software that has the aim of producing 3D scans by using this data, but, as we
+experienced during Lab 4, it has a multitude of issues. Perhaps using the laser
+scanner technique, rather than combining pictures, could yield better results.
+This would be an interesting approach to try in the future.
+
+The main piece of advice that we would give next year's students would be to start
+early and to work on the software and hardware at the same time if possible. Before
+designing anything for our scanner, we took sample photos and videos in order to
+provide an approximation of the final result. This allowed us to divide the work
+and design the hardware and software in parallel, which significantly sped up the
+design process.
+
 % 1/2 page
 % Summarize the overall project; what were the most important results?
 % Summarize the impact of the project on the specific aims.
 \section{Conclusion}
 
-% TODO: Citations/references
+As discussed in Section~\ref{results}, this project was a moderate success.
+On the hardware side, we were extremely successful: the design is simple,
+the total cost of the parts is very low, it is easy to scale, and transporting
+it is as easy as transporting the dowels that are used. We believe that, with
+these features, our laser scanner fills an important hole in the spectrum of
+existing DIY laser scanners.
+
+Although we were not able to produce STL files or XYZ files (point clouds) that
+accurately captured the objects we wished to scan, the physical design of our
+laser scanner was successful and met our aims (on the hardware side).
+The only shortcoming of this project was in data processing. It is unclear exactly
+why this is, but the point clouds that we produced do not resemble the objects that
+we scan.  The main reference that we used for implementing the software
+was~\cite{instructions}, which had a tendency to be brief to a fault; it is entirely
+possible that a mistranslation from this document to code was responsible for our software
+issues.  Perhaps with more time, it would have been possible to produce successful scans.
+
+\bibliographystyle{plain} \bibliography{refs}
 
 % Summarize what each team member contributed to the project and report.
 \section{Team Member Contributions}
+\begin{description}
+    \item[Noah] Majority of programming, report
+    \item[Catherine] Design, class presentation
+\end{description}
 
 \appendix
 % Include photos showing progress and final results.
@@ -122,5 +240,9 @@ We finally settled on a different, arguably simpler design.
 
 % Include code and models written for the project.
 \section{Code Listings}
+All of the code for this project (including OpenSCAD code, as well as some sample
+scanning photos and videos) is available on
+\href{https://github.com/nhalford/3d-scanner/}{GitHub}. Our Python program is 
+\texttt{src/python/hough.py}.
 
 \end{document}
